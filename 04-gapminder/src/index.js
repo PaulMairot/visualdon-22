@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
 import gdp from '../data/income_per_person_gdppercapita_ppp_inflation_adjusted.csv';
 import expectancy from '../data/life_expectancy_years.csv';
+import population from '../data/population_total.csv';
 
 // Pour importer les données
 // import file from '../data/data.csv'
@@ -16,19 +17,24 @@ function getValue (val) {
           return parseFloat(val) * 1000000;
         }
     }
-  }
+}
 
 
 // Convert value to number
 gdp.forEach(row => {
         if (typeof row["2021"] === 'string') {
             row["2021"] = getValue(row["2021"]);
-        }
-        
+        } 
 });
 
+population.forEach(row => {
+        row["2021"] = getValue(row["2021"]);
+});
 
-let margin = {top: 10, right: 20, bottom: 30, left: 50},
+console.log(population);
+
+
+let margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 650 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -53,6 +59,10 @@ let y = d3.scaleLinear()
 svg.append("g")
 .call(d3.axisLeft(y));
 
+var z = d3.scaleLinear()
+    .domain([200000, 1310000000])
+    .range([ 4, 60]);
+
 
 svg.append('g')
 .selectAll("dot")
@@ -67,3 +77,9 @@ svg.append('g')
 
 svg.selectAll("circle").data(expectancy).join()
     .attr("cy", function (d) { return y(d["2021"]); } )
+
+svg.selectAll("circle").data(expectancy).join()
+    .attr("cy", function (d) { return y(d["2021"]); } )
+
+svg.selectAll("circle").data(population).join()
+    .attr("r", function (d) { return z(d["2021"]); } )
