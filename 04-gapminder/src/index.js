@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import { count } from 'd3';
 import gdp from '../data/income_per_person_gdppercapita_ppp_inflation_adjusted.csv';
 import expectancy from '../data/life_expectancy_years.csv';
 import population from '../data/population_total.csv';
@@ -15,11 +16,14 @@ function getValue (val) {
           return parseFloat(val) * 1000;
         } else if (multiplier == "m") {
           return parseFloat(val) * 1000000;
+        } else if (multiplier == "b") {
+          return parseFloat(val) * 1000000000;
         }
     }
 }
 
-
+//EXERCICE 1
+/*
 // Convert value to number
 gdp.forEach(row => {
         if (typeof row["2021"] === 'string') {
@@ -54,7 +58,7 @@ svg.append("g")
 
 // Add Y axis
 let y = d3.scaleLinear()
-    .domain([10, 90])
+    .domain([40, 100])
     .range([ height, 0]);
 svg.append("g")
 .call(d3.axisLeft(y));
@@ -71,7 +75,7 @@ svg.append('g')
 .append("circle")
     .attr("cx", function (d) { return x(d["2021"]); } )
     .attr("r", 10 )
-    .style("fill", "#69b3a2")
+    .style("fill", "#6933af")
     .style("opacity", "0.7")
     .attr("stroke", "black")
 
@@ -83,3 +87,63 @@ svg.selectAll("circle").data(expectancy).join()
 
 svg.selectAll("circle").data(population).join()
     .attr("r", function (d) { return z(d["2021"]); } )
+
+*/
+
+/* EXERCICE 2 */
+let listCountries = []
+
+expectancy.forEach(row => {
+  let countryData = {};
+  countryData[row['country']] = row['2021']
+  listCountries.push(countryData)
+});
+console.log(listCountries);
+
+let margin = {top: 20, right: 20, bottom: 30, left: 50},
+  width = 650 - margin.left - margin.right,
+  height = 500 - margin.top - margin.bottom;
+
+let svg = d3.select("#graph")
+.append("svg")
+.attr("width", width + margin.left + margin.right)
+.attr("height", height + margin.top + margin.bottom);
+
+  // Map and projection
+let path = d3.geoPath();
+let projection = d3.geoMercator()
+  .scale(70)
+  .center([0,20])
+  .translate([width / 2, height / 2]);
+  
+// Data and color scale
+let data = new Map();
+let colorScale = d3.scaleThreshold()
+  .domain([50, 60, 70, 80, 90, 100])
+  .range(d3.schemeGreens[7]);
+
+  d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson").then(function(d){
+      // Draw the map
+      svg.append("g")
+      .selectAll("path")
+      .data(d.features)
+      .join("path")
+      // draw each country
+      .attr("d", d3.geoPath()
+        .projection(projection)
+      )
+      // set id
+      .attr("id", function(d){ return d.properties.name;})
+      .attr("fill", function (d) {
+        let number = 0;
+        listCountries.forEach(country => {
+            if (typeof country[this.id] != "undefined") {
+              console.log(country[this.id]);
+              number = country[this.id]
+            }
+        })
+        console.log(number);
+        return colorScale(number);
+      })
+  })
+    
