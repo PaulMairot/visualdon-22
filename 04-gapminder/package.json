@@ -10,7 +10,12 @@
   "author": "Noemi Romano",
   "license": "ISC",
   "dependencies": {
+    "commander": "^9.1.0",
+    "csv-merger": "^0.1.4",
+    "csv-parse": "^5.0.4",
+    "csv-stringify": "^6.0.5",
     "d3": "^7.3.0",
+    "merge-csv": "^1.0.3",
     "package.json": "^2.0.1"
   },
   "devDependencies": {
