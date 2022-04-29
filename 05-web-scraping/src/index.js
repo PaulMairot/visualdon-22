@@ -3,7 +3,7 @@ import fetch from "isomorphic-fetch"
 import puppeteer from "puppeteer"
 
 /* Partie 1 - Screenshot Wikipedia */
-/*
+
 (async () => {
     const browser = await puppeteer.launch({
         defaultViewport: {width: 1920, height: 1720}
@@ -14,11 +14,11 @@ import puppeteer from "puppeteer"
   
     await browser.close();
   })();
-*/
+
 
 
 /* Partie 2 - Webscraper Wikipedia */
-/*
+
 (async () => {
     const url = 'https://fr.wikipedia.org/wiki/Canton_(Suisse)';
     const browser = await puppeteer.launch();
@@ -60,7 +60,7 @@ import puppeteer from "puppeteer"
       console.log('error', error);
     }
   })();
-*/
+
 
 /* Partie 3 - Webscraper e-commerce */
 (async () => {
@@ -80,7 +80,7 @@ import puppeteer from "puppeteer"
             let price = await el.$eval('.price', el => el.textContent);
             let stars = await el.$eval('.ratings :nth-child(2)', el => el.getAttribute( 'data-rating' ));
             stars = parseInt(stars);
-            
+
             let productComplete = {
                 produit: product,
                 prix: price,
